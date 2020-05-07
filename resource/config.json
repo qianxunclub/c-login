@@ -1,0 +1,9 @@
+{
+    "db": {
+        "host": "db.qianxunclub.com",
+        "port": 3306,
+        "username": "c_login",
+        "password": "c_login123456",
+        "database": "c_login"
+    }
+}
