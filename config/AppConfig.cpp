@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include <iostream>
-#include "DbConfig.h"
+#include "AppConfig.h"
 #include <json/json.h>
 
 
@@ -23,27 +23,31 @@ namespace appConfig {
     }
 
     void DbConfig::getDbConfig() {
+        Json::Value root = config();
+        DbConfig::setHost(root["db"]["host"].asString());
+        DbConfig::setPort(root["db"]["port"].asInt());
+        DbConfig::setDatabase(root["db"]["database"].asString());
+        DbConfig::setUsername(root["db"]["username"].asString());
+        DbConfig::setPassword(root["db"]["password"].asString());
+    }
+
+    Json::Value config() {
         Json::Reader reader;
         Json::Value root;
         ifstream in("../resource/config.json", ios::binary);
 
         if (!in.is_open()) {
             cout << "Error opening file\n";
-            return;
+            return "";
         }
 
         if (!reader.parse(in, root)) {
             cout << "Error parse file\n";
-            return;
+            return "";
         }
-        DbConfig::setHost(root["db"]["host"].asString());
-        DbConfig::setPort(root["db"]["port"].asInt());
-        DbConfig::setDatabase(root["db"]["database"].asString());
-        DbConfig::setUsername(root["db"]["username"].asString());
-        DbConfig::setPassword(root["db"]["password"].asString());
         in.close();
+        return root;
     }
-
 
     const string &DbConfig::getHost() const {
         return host;
@@ -83,5 +87,37 @@ namespace appConfig {
 
     void DbConfig::setDatabase(const string &database) {
         DbConfig::database = database;
+    }
+
+    RedisConfig::RedisConfig(const string &host, int port) : host(host), port(port) {}
+
+    const string &RedisConfig::getHost() const {
+        return host;
+    }
+
+    void RedisConfig::setHost(const string &host) {
+        RedisConfig::host = host;
+    }
+
+    int RedisConfig::getPort() const {
+        return port;
+    }
+
+    void RedisConfig::setPort(int port) {
+        RedisConfig::port = port;
+    }
+
+    void RedisConfig::getRedisConfig() {
+        Json::Value root = config();
+        RedisConfig::setHost(root["redis"]["host"].asString());
+        RedisConfig::setPort(root["redis"]["port"].asInt());
+    }
+
+    RedisConfig::RedisConfig() {
+        try {
+            getRedisConfig();
+        } catch (const std::exception &e) {
+            cout << e.what() << endl;
+        }
     }
 }

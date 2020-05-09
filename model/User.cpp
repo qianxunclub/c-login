@@ -7,6 +7,13 @@
 using namespace model;
 using namespace std;
 
+User::User() {
+
+}
+
+User::User(int id, const string &username, const string &password, const string &salt) : id(id), username(username),
+                                                                                         password(password),
+                                                                                         salt(salt) {}
 
 int User::getId() const {
     return id;

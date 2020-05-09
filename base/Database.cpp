@@ -8,6 +8,7 @@
 
 using namespace std;
 using namespace appConfig;
+using namespace base;
 
 
 Database *Database::database = new Database();
@@ -17,9 +18,6 @@ Database *Database::getDatabase() {
 }
 
 Database::Database() {
-    DbConfig dbConfig;
-    Database::connect(dbConfig.getHost(), dbConfig.getPort(), dbConfig.getUsername(), dbConfig.getPassword(),
-                      dbConfig.getDatabase());
 }
 
 bool Database::connect(string host, int port, string username, string password, string database) {
@@ -35,9 +33,26 @@ bool Database::connect(string host, int port, string username, string password, 
         return false;
     }
     isConnect = true;
+    printf("数据库连接成功:%s\n", host.c_str());
     return true;
 }
 
-const MYSQL &Database::getMysql() const {
-    return mysql;
+bool Database::CheckSQL(string sql) {
+    string key[9] = {"%", "/", "union", "|", "&", "^", "#", "/*", "*/"};
+    for (int i = 0; i < 9; i++) {
+        if (sql.find(key[i]) != string::npos) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Database::CheckParameter(string Parameter) {
+    string key[14] = {"and", "*", "=", " ", "%0a", "%", "/", "union", "|", "&", "^", "#", "/*", "*/"};
+    for (int i = 0; i < 14; i++) {
+        if (Parameter.find(key[i]) != string::npos) {
+            return false;
+        }
+    }
+    return true;
 }

@@ -2,6 +2,7 @@
 // Created by 张斌 on 2020/5/7.
 //
 #include <string>
+#include "../../../../../../../usr/local/Cellar/jsoncpp/1.9.1/include/json/value.h"
 
 using namespace std;
 
@@ -37,5 +38,27 @@ namespace appConfig {
         string password;
         string database;
         void getDbConfig();
+
     };
+
+    class RedisConfig {
+    public:
+        RedisConfig();
+
+        RedisConfig(const string &host, int port);
+
+        const string &getHost() const;
+
+        void setHost(const string &host);
+
+        int getPort() const;
+
+        void setPort(int port);
+
+    private:
+        string host;
+        int port;
+        void getRedisConfig();
+    };
+    Json::Value config();
 }

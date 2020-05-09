@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.c_login";
+option java_outer_classname = "LoginProto";
+
+package grpc_login;
+
+message Result {
+  int32 code = 1;
+  string message = 2;
+}
+
+message User{
+  int32 id = 1;
+  string username = 2;
+}
+message SessionRequest{
+  string token = 1;
+  string refresh_token = 2;
+}
+
+message SessionResponse{
+  string token = 1;
+}
+
+message UserRequest {
+  string username = 1;
+  string password = 2;
+}
+
+service LoginGrpcService {
+  rpc registerUser  (UserRequest)    returns (Result) {}
+  rpc login  (UserRequest)    returns (SessionResponse) {}
+  rpc userInfo  (SessionResponse)    returns (User) {}
+  rpc logout  (SessionRequest)    returns (Result) {}
+}
+

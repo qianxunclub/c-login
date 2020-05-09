@@ -1,6 +1,9 @@
 //
 // Created by 张斌 on 2020/5/7.
 //
+#ifndef C_LOGIN_USER_H
+#define C_LOGIN_USER_H
+
 #include <string>
 
 using namespace std;
@@ -8,6 +11,10 @@ using namespace std;
 namespace model {
     class User {
     public:
+        User();
+
+        User(int id, const string &username, const string &password, const string &salt);
+
         int getId() const;
 
         void setId(int id);
@@ -31,3 +38,5 @@ namespace model {
         string salt;
     };
 }
+
+#endif //C_LOGIN_USER_H

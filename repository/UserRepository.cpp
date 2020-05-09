@@ -3,36 +3,98 @@
 //
 
 #include <User.h>
+#include <Common.h>
 #include "UserRepository.h"
 #include "Database.h"
 
 using namespace model;
+using namespace utils;
 using namespace repository;
+using namespace base;
 
-Database database;
 
-bool UserRepository::query() {
-    MYSQL_RES *res;
-    MYSQL_ROW row;
-    const char *sql = "select * from tb_account";
-    mysql_query(&database.mysql, sql);
-    res = mysql_store_result(&database.mysql);
-    while (row = mysql_fetch_row(res)) {
-        User user = User();
-        user.setId(atoi(row[0]));
-        user.setUsername(row[1]);
+/**
+ * 校验是否已经注册
+ * @return
+ */
+bool UserRepository::isRegister(string username) {
+    if (!Database::getDatabase()->CheckParameter(username)) {
+        printf("用户名包含敏感字符：%s\n", username.c_str());
     }
+    char sql[256];
+    sprintf(sql, "select * from user where username = '%s'", username.c_str());
+    mysql_query(&Database::getDatabase()->mysql, sql);
+    MYSQL_RES *res;
+    res = mysql_store_result(&Database::getDatabase()->mysql);
+    const char *error = mysql_error(&Database::getDatabase()->mysql);
+    if (strlen(error) > 0) {
+        printf("校验用户是否存在失败：%s", error);
+        mysql_free_result(res);
+        return false;
+    }
+    int count = mysql_affected_rows(&Database::getDatabase()->mysql);
+
     mysql_free_result(res);
+    return count > 0;
 }
 
-bool UserRepository::isRegister() {
-    MYSQL_RES *res;
-    const char *sql = "select * from tb_account";
-    mysql_query(&database.mysql, sql);
-    res = mysql_store_result(&database.mysql);
-    int count = mysql_affected_rows(&database.mysql);
-    if (count > 0) {
-        return true;
+/**
+ * 注册
+ * @return
+ */
+Result UserRepository::registerUser(string username, string password, string salt) {
+    if (isRegister(username)) {
+        printf("该用户名已经注册：%s\n", username.c_str());
+        return Result(1, "该用户名已经注册");
     }
-    return false;
+    char sql[256];
+    sprintf(sql, "insert into user(username,password,salt) values ('%s','%s','%s')", username.c_str(), password.c_str(),
+            salt.c_str());
+    mysql_query(&Database::getDatabase()->mysql, sql);
+    const char *error = mysql_error(&Database::getDatabase()->mysql);
+    if (strlen(error) > 0) {
+        return Result(1, error);
+    }
+
+    return Result(0);
+}
+
+User UserRepository::userInfo(string username) {
+    User user = User();
+    MYSQL_RES *res;
+    char sql[256];
+    sprintf(sql, "select * from user where username = '%s'", username.c_str());
+    mysql_query(&Database::getDatabase()->mysql, sql);
+    res = mysql_store_result(&Database::getDatabase()->mysql);
+    if (mysql_affected_rows(&Database::getDatabase()->mysql) <= 0) {
+        printf("用户不存在：%s", username.c_str());
+        return user;
+    }
+    MYSQL_ROW row = mysql_fetch_row(res);
+    user.setId(atoi(row[0]));
+    user.setUsername(row[1]);
+    user.setPassword(row[2]);
+    user.setSalt(row[3]);
+    mysql_free_result(res);
+    return user;
+}
+
+User UserRepository::queryUser(string username, string password) {
+    User user = User();
+    MYSQL_RES *res;
+    char sql[256];
+    sprintf(sql, "select * from user where username = '%s' and password = '%s'", username.c_str(), password.c_str());
+    mysql_query(&Database::getDatabase()->mysql, sql);
+    res = mysql_store_result(&Database::getDatabase()->mysql);
+    if (mysql_affected_rows(&Database::getDatabase()->mysql) <= 0) {
+        printf("用户不存在：%s", username.c_str());
+        return user;
+    }
+    MYSQL_ROW row = mysql_fetch_row(res);
+    user.setId(atoi(row[0]));
+    user.setUsername(row[1]);
+    user.setPassword(row[2]);
+    user.setSalt(row[3]);
+    mysql_free_result(res);
+    return user;
 }
