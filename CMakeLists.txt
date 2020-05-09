@@ -8,14 +8,14 @@ link_directories(${LINK_DIR})
 set(INC_DIR /usr/local/include)
 include_directories(${INC_DIR})
 
-set(MYSQL_INC_DIR /usr/local/opt/mysql-client/include)
+set(MYSQL_INC_DIR libs/mysql)
 include_directories(${MYSQL_INC_DIR})
 
-set(JSON_INC_DIR /usr/local/opt/jsoncpp/include)
+set(JSON_INC_DIR libs/json)
 include_directories(${JSON_INC_DIR})
 
 
-set(REDIS_INC_DIR /usr/local/include/hiredis)
+set(REDIS_INC_DIR libs/hiredis)
 include_directories(${REDIS_INC_DIR})
 
 
