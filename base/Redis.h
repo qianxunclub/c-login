@@ -6,7 +6,7 @@
 #define C_LOGIN_REDIS_H
 
 #include <string>
-#include <hiredis.h>
+#include <hiredis/hiredis.h>
 
 using namespace std;
 

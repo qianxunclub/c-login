@@ -28,7 +28,7 @@ bool UserRepository::isRegister(string username) {
     res = mysql_store_result(&Database::getDatabase()->mysql);
     const char *error = mysql_error(&Database::getDatabase()->mysql);
     if (strlen(error) > 0) {
-        printf("校验用户是否存在失败：%s", error);
+        printf("校验用户是否存在失败：%s\n", error);
         mysql_free_result(res);
         return false;
     }
@@ -67,7 +67,7 @@ User UserRepository::userInfo(string username) {
     mysql_query(&Database::getDatabase()->mysql, sql);
     res = mysql_store_result(&Database::getDatabase()->mysql);
     if (mysql_affected_rows(&Database::getDatabase()->mysql) <= 0) {
-        printf("用户不存在：%s", username.c_str());
+        printf("用户不存在：%s\n", username.c_str());
         return user;
     }
     MYSQL_ROW row = mysql_fetch_row(res);
@@ -87,7 +87,7 @@ User UserRepository::queryUser(string username, string password) {
     mysql_query(&Database::getDatabase()->mysql, sql);
     res = mysql_store_result(&Database::getDatabase()->mysql);
     if (mysql_affected_rows(&Database::getDatabase()->mysql) <= 0) {
-        printf("用户不存在：%s", username.c_str());
+        printf("用户不存在：%s\n", username.c_str());
         return user;
     }
     MYSQL_ROW row = mysql_fetch_row(res);

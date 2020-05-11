@@ -1,22 +1,28 @@
 //
 // Created by 张斌 on 2020/5/7.
 //
+#ifndef C_LOGIN_LOGINSERVICE_H
+#define C_LOGIN_LOGINSERVICE_H
 
 #include <string>
 #include <Result.h>
 
 using namespace std;
+using namespace model;
 
+namespace service {
 
-class LoginService {
-public:
-    model::Result registerUser(string username, string password);
+    class LoginService {
+    public:
+        Result registerUser(string username, string password);
 
-    model::Result login(string username, string password);
+        Result login(string username, string password);
 
-    model::User userInfo(string token);
+        User userInfo(string token);
 
-    bool logout(string token);
-};
+        bool logout(string token);
+    };
+}
 
+#endif //C_LOGIN_LOGINSERVICE_H
 

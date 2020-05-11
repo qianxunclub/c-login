@@ -10,8 +10,8 @@
 
 using namespace repository;
 using namespace utils;
-using namespace model;
 using namespace base;
+using namespace service;
 
 UserRepository userRepository;
 

@@ -4,3 +4,4 @@
 
 
 void RunServer();
+void init();

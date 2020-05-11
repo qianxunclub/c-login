@@ -31,7 +31,7 @@ void Redis::del(string key) {
 bool Redis::connect(string host, int port) {
     this->_connect = redisConnect(host.c_str(), port);
     if (this->_connect != NULL && this->_connect->err) {
-        printf("redis connect error: %s\n", this->_connect->errstr);
+        printf("Redis connect error: %s\n", this->_connect->errstr);
         return 0;
     }
     printf("Redis 连接成功:%s\n", host.c_str());

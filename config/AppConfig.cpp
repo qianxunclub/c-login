@@ -5,7 +5,6 @@
 #include <fstream>
 #include <iostream>
 #include "AppConfig.h"
-#include <json/json.h>
 
 
 namespace appConfig {

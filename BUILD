@@ -1,3 +1,4 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary","cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
@@ -6,58 +7,46 @@ cc_binary(
         "main/Main.cpp"
         ],
     deps = [
-        ":libs",
         ":utils",
-        ":model",
-        ":app_config",
-        ":base",
     ],
 )
 
 cc_library(
-    name = "libs",
-    srcs = [
-        "libs/cipher/aes.cpp",
-        "libs/cipher/aes_encryptor.cpp",
-        "libs/cipher/md5.cc",
-        "libs/cipher/sha256.cc",
-    ],
-    hdrs = [
-		"libs/cipher/aes.h",
-		"libs/cipher/aes_encryptor.h",
-		"libs/cipher/md5.h",
-		"libs/cipher/sha256.h",
-    ],
-    deps = [
-    ],
+    name = "proto",
+    srcs = ["protos/login.proto"],
 )
 
 cc_library(
     name = "model",
-    srcs = [
-        "model/User.cpp",
-        "model/Result.cpp",
-    ],
-    hdrs = [
-		"model/User.h",
-		"model/Result.h",
-    ],
+    srcs = glob(["model/**/*.cpp"]),
+    hdrs = glob(["model/**/*.h"]),
 )
-cc_import(
-    name = "cipher",
-    hdrs = ["libs/cipher/aes_encryptor.h","libs/cipher/aes.h","libs/cipher/md5.h","libs/cipher/sha256.h"],
+
+cc_library(
+    name = "repository",
+    srcs = glob(["repository/**/*.cpp"]),
+    hdrs = glob(["repository/**/*.h"]),
+    deps = [
+        ":model",
+        ":utils",
+        ":base"
+    ]
+)
+
+cc_library(
+    name = "service",
+    srcs = glob(["service/**/*.cpp"]),
+    hdrs = glob(["service/**/*.h"]),
+    deps = [
+        ":repository"
+    ]
 )
 
 cc_library(
     name = "utils",
-    srcs = [
-        "utils/Common.cpp",
-    ],
-    hdrs = [
-		"utils/Common.h",
-    ],
+    srcs = glob(["utils/**/*.cpp"]),
+    hdrs = glob(["utils/**/*.h"]),
     deps = [
-        ":libs",
         ":base",
         ":cipher",
     ],
@@ -66,51 +55,40 @@ cc_library(
 
 cc_library(
     name = "base",
-    srcs = [
-        "base/Database.cpp",
-        "base/Redis.cpp",
-    ],
-    hdrs = [
-		"base/Database.h",
-		"base/Redis.h",
-    ],
+    srcs = glob(["base/**/*.cpp"]),
+    hdrs = glob(["base/**/*.h"]),
     deps = [
-        ":app_config",
-        ":hiredis"
-    ],
-
-)
-cc_import(
-    name = "json",
-    hdrs = [
-        "libs/json/autolink.h",
-        "libs/json/config.h",
-        "libs/json/features.h",
-        "libs/json/forwards.h",
-        "libs/json/json.h",
-        "libs/json/reader.h",
-        "libs/json/value.h",
-        "libs/json/writer.h",
+        ":config",
+        ":hiredis",
+        ":mysql"
     ],
 
 )
 
 cc_library(
-    name = "app_config",
-    srcs = [
-        "config/AppConfig.cpp",
-    ],
-    hdrs = [
-		"config/AppConfig.h",
-    ],
+    name = "config",
+    srcs = glob(["config/**/*.cpp"]),
+    hdrs = glob(["config/**/*.h"]),
     deps = [
         ":json"
     ],
+    data = ["//resource:config.json"],
 )
 
-cc_import(
+cc_library(
+    name = "cipher",
+    hdrs = glob(["libs/cipher/**/*.h"]),
+)
+cc_library(
+    name = "json",
+    hdrs = glob(["libs/json/**/*.h"]),
+)
+cc_library(
     name = "hiredis",
-    hdrs = [
-        "libs/hiredis/hiredis.h"
-        ],
+    hdrs = glob(["libs/hiredis/**/*.h"]),
+)
+
+cc_library(
+    name = "mysql",
+    hdrs = glob(["libs/mysql/**/*.h"]),
 )
