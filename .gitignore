@@ -19,9 +19,3 @@ out/
 .project
 .settings
 bin
-
-cmake-build-debug
-CMakeFiles
-CMakeCache.txt
-c_login.cbp
-cmake_install.cmake
