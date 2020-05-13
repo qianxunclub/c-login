@@ -18,6 +18,7 @@ out/
 .settings
 bin
 
+c_login
 cmake-build-debug
 CMakeFiles
 CMakeCache.txt

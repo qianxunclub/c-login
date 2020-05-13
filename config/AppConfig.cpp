@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include <iostream>
-#include "AppConfig.h"
+#include <AppConfig.h>
 
 
 namespace appConfig {
@@ -33,7 +33,7 @@ namespace appConfig {
     Json::Value config() {
         Json::Reader reader;
         Json::Value root;
-        ifstream in("../resource/config.json", ios::binary);
+        ifstream in("resource/config.json", ios::binary);
 
         if (!in.is_open()) {
             cout << "Error opening file\n";

@@ -1,79 +1,72 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary","cc_library")
 package(default_visibility = ["//visibility:public"])
+
+load("@rules_cc//cc:defs.bzl", "cc_binary","cc_library", "cc_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
 
 cc_binary(
     name = "c_login",
     srcs = [
-        "main/Main.cpp"
+        "main/Main.cpp",
+        "main/Main.h"
         ],
     deps = [
-        ":utils",
+        ":core",
     ],
 )
 
 cc_library(
-    name = "proto",
-    srcs = ["protos/login.proto"],
-)
-
-cc_library(
-    name = "model",
-    srcs = glob(["model/**/*.cpp"]),
-    hdrs = glob(["model/**/*.h"]),
-)
-
-cc_library(
-    name = "repository",
-    srcs = glob(["repository/**/*.cpp"]),
-    hdrs = glob(["repository/**/*.h"]),
+    name = "core",
+    srcs = glob([
+        "model/**/*.cpp",
+        "repository/**/*.cpp",
+        "service/**/*.cpp",
+        "utils/**/*.cpp",
+        "base/**/*.cpp",
+        "config/**/*.cpp",
+        ]),
+    hdrs = glob([
+        "model/**/*.h",
+        "repository/**/*.h",
+        "service/**/*.h",
+        "utils/**/*.h",
+        "base/**/*.h",
+        "config/**/*.h",
+        ]),
     deps = [
-        ":model",
-        ":utils",
-        ":base"
-    ]
-)
-
-cc_library(
-    name = "service",
-    srcs = glob(["service/**/*.cpp"]),
-    hdrs = glob(["service/**/*.h"]),
-    deps = [
-        ":repository"
-    ]
-)
-
-cc_library(
-    name = "utils",
-    srcs = glob(["utils/**/*.cpp"]),
-    hdrs = glob(["utils/**/*.h"]),
-    deps = [
-        ":base",
+        ":cc_proto",
+        ":json",
         ":cipher",
-    ],
-)
-
-
-cc_library(
-    name = "base",
-    srcs = glob(["base/**/*.cpp"]),
-    hdrs = glob(["base/**/*.h"]),
-    deps = [
-        ":config",
         ":hiredis",
-        ":mysql"
+        ":mysql",
     ],
-
+    data = ["//resource:config.json"],
 )
 
 cc_library(
     name = "config",
-    srcs = glob(["config/**/*.cpp"]),
-    hdrs = glob(["config/**/*.h"]),
+    srcs = glob([
+        "config/**/*.cpp",
+        ]),
+    hdrs = glob([
+        "config/**/*.h",
+        ]),
     deps = [
-        ":json"
+        ":json",
     ],
     data = ["//resource:config.json"],
 )
+
+
+proto_library(
+    name = "proto",
+    srcs = ["protos/login.proto"],
+)
+
+cc_proto_library(
+	name = "cc_proto",
+    deps = [":proto"],
+)
+
 
 cc_library(
     name = "cipher",

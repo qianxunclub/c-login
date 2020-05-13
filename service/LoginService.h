@@ -8,7 +8,6 @@
 #include <Result.h>
 
 using namespace std;
-using namespace model;
 
 namespace service {
 
