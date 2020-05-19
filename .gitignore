@@ -1,11 +1,11 @@
-bazel-bin/
-bazel-c_login/
-bazel-genfiles/
-bazel-login_back_grpc_bazel_docker/
-bazel-out/
-bazel-testlogs/
-external/
-.vscode/
+bazel-bin
+bazel-c_login
+bazel-genfiles
+bazel-login_back_grpc_bazel_docker
+bazel-out
+bazel-testlogs
+external
+.vscode
 *.log
 idea/
 .idea/
@@ -14,7 +14,7 @@ idea/
 *.ipr
 *.iws
 out/
-cmake-build-debug/
+cmake-build-debug
 
 .classpath
 .project
