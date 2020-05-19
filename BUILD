@@ -10,7 +10,6 @@ cc_binary(
         ],
     deps = [
         ":core",
-        ":pb",
     ],
 )
 

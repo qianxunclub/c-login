@@ -3,42 +3,23 @@ project(c_login C CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
+include_directories(${PROJECT_SOURCE_DIR})
+
+include(FetchContent)
+FetchContent_Declare(
+        gRPC
+        GIT_REPOSITORY https://github.com/grpc/grpc
+        GIT_TAG        v1.28.1
+)
+set(FETCHCONTENT_QUIET OFF)
+FetchContent_MakeAvailable(gRPC)
+
 set(LINK_DIR libs/lib)
 link_directories(${LINK_DIR})
 
-set(MYSQL_INC_DIR libs/mysql)
-include_directories(${MYSQL_INC_DIR})
+set(INC_DIR libs)
+include_directories(${INC_DIR})
 
-set(JSON_INC_DIR libs/json)
-include_directories(${JSON_INC_DIR})
-
-
-set(REDIS_INC_DIR libs/hiredis)
-include_directories(${REDIS_INC_DIR})
-
-
-set(CIPHER_INC_DIR libs/cipher)
-include_directories(${CIPHER_INC_DIR})
-
-set(GRPCPP_INC_DIR libs/grpcpp)
-include_directories(${GRPCPP_INC_DIR})
-
-set(GRPC_INC_DIR libs/grpc)
-include_directories(${GRPC_INC_DIR})
-
-set(GOOGLE_INC_DIR libs/protobuf)
-include_directories(${GOOGLE_INC_DIR})
-
-include_directories(config)
-include_directories(libs)
-include_directories(utils)
-include_directories(model)
-include_directories(repository)
-include_directories(service)
-include_directories(main)
-include_directories(protos)
-include_directories(base)
-include_directories(grpc)
 
 add_executable(c_login
         libs/cipher/aes.cpp
@@ -72,13 +53,11 @@ add_executable(c_login
         base/Redis.cpp
         base/Redis.h
 
-       grpc/LoginGrpcServiceImpl.cc
-
         protos/login.grpc.pb.cc
-       protos/login.grpc.pb.h
+        protos/login.grpc.pb.h
 
         main/Main.cpp
-        main/Main.h
+        client/Client.cpp
         )
 target_link_libraries(c_login
         libmariadb.dylib
@@ -87,4 +66,5 @@ target_link_libraries(c_login
         libgrpc.dylib
         libprotobuf.dylib
         libprotoc.dylib
+        grpc++
         )
